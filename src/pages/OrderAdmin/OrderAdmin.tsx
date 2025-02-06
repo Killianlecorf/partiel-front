@@ -9,7 +9,7 @@ interface Product {
 
 interface OrderItem {
   id: number;
-  product: number; // On garde l'ID du produit ici, au lieu de l'objet complet
+  product: number;
   quantity: number;
 }
 
@@ -25,18 +25,17 @@ interface Order {
 
 const OrderAdmin: FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [products, setProducts] = useState<Product[]>([]); // Etat pour stocker les produits
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fonction pour récupérer les produits
     const fetchProducts = async () => {
       try {
         const response = await fetch('http://localhost:5656/products/all');
         if (response.ok) {
           const data = await response.json();
-          setProducts(data); // Stockage des produits
+          setProducts(data);
         } else {
           console.error('Failed to fetch products');
         }
@@ -45,7 +44,6 @@ const OrderAdmin: FC = () => {
       }
     };
 
-    // Fonction pour récupérer les commandes
     const fetchOrders = async () => {
       try {
         const response = await fetch('http://localhost:5656/orders/all');
@@ -64,9 +62,8 @@ const OrderAdmin: FC = () => {
 
     fetchProducts();
     fetchOrders();
-  }, []);
+  }, [orders]);
 
-  // Fonction pour mettre à jour le statut d'une commande
   const updateOrderStatus = async (orderId: number, newStatus: string) => {
     try {
       const response = await fetch(`http://localhost:5656/orders/status/${orderId}`, {
@@ -74,7 +71,7 @@ const OrderAdmin: FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ statut: newStatus }),
+        body: JSON.stringify({ status: newStatus }),
       });
 
       if (response.ok) {

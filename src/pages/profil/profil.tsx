@@ -43,6 +43,9 @@ const Profil: FC = () => {
         const response = await fetch(`http://localhost:5656/orders/user/${user?.id}`);
         if (response.ok) {
           const data: Order[] = await response.json();
+          
+          data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          
           setOrders(data);
 
           const productIds: number[] = Array.from(
@@ -73,7 +76,7 @@ const Profil: FC = () => {
       const productMap = productData.reduce((acc: { [key: number]: Product }, product: Product) => {
         acc[product.id] = product;
         return acc;
-      }, {});
+      }, {}); 
       setProducts(productMap);
     } catch (error) {
       console.error('Error fetching products:', error);

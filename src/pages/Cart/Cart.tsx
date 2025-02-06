@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../types/Product';
+import request from '../../utils/request';
 
 interface CartItem {
     id: number;
@@ -26,58 +27,77 @@ const Cart: FC = () => {
     useEffect(() => {
         if (user?.id) {
             setLoading(true);
-            fetch(`http://localhost:5656/ordersitems/user/${user.id}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (Array.isArray(data)) {
-                        setCartItems(data);
-                    } else {
-                        console.error('La réponse n\'est pas un tableau');
-                    }
-                })
-                .catch(error => console.error('Error fetching cart items:', error))
-                .finally(() => setLoading(false));
+            fetchCartItems(user.id);
         }
     }, [user?.id]);
 
-    const handleRemoveFromCart = (itemId: number) => {
-        fetch(`http://localhost:5656/ordersitems/${itemId}`, {
-            method: 'DELETE',
-        })
-        .then(response => {
-            if (response.ok) {
-                setCartItems(cartItems.filter(item => item.id !== itemId));
-            } else {
-                console.error('Failed to remove item');
-            }
-        })
-        .catch(error => console.error('Error deleting item:', error));
+    const fetchCartItems = async (userId: number) => {
+        const response = await request(`ordersitems/user/${userId}`, 'GET');
+        if (response.ok && Array.isArray(response.data)) {
+            setCartItems(response.data);
+        } else {
+            console.error('Failed to fetch cart items');
+        }
+        setLoading(false);
     };
 
-    const handleQuantityChange = (itemId: number, newQuantity: number) => {
-        // Si la nouvelle quantité est valide
-        if (newQuantity < 1) return; // Ne permet pas une quantité inférieure à 1
+    const handleRemoveFromCart = async (itemId: number) => {
+        const response = await request(`ordersitems/${itemId}`, 'DELETE');
+        if (response.ok) {
+            setCartItems(cartItems.filter(item => item.id !== itemId));
+        } else {
+            console.error('Failed to remove item');
+        }
+    };
+
+    const handleQuantityChange = async (itemId: number, newQuantity: number) => {
+        if (newQuantity < 1) return;
         const updatedCartItems = cartItems.map(item => 
             item.id === itemId ? { ...item, quantity: newQuantity } : item
         );
         setCartItems(updatedCartItems);
 
-        // Envoie de la requête PUT pour mettre à jour la quantité dans la base de données
-        fetch(`http://localhost:5656/ordersitems/${itemId}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                productId: updatedCartItems.find(item => item.id === itemId)?.product.id,
-                quantity: newQuantity,
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                console.error('Failed to update quantity');
-            }
-        })
-        .catch(error => console.error('Error updating quantity:', error));
+        const response = await request(`ordersitems/${itemId}`, 'PUT', {
+            productId: updatedCartItems.find(item => item.id === itemId)?.product.id,
+            quantity: newQuantity,
+        });
+
+        if (!response.ok) {
+            console.error('Failed to update quantity');
+        }
     };
+
+    const handleCreateOrder = async () => {
+        console.log("Commande - " + new Date().toLocaleDateString());
+    
+        const order = {
+            userId: user?.id,
+            name: "Commande - " + new Date().toLocaleDateString(),
+            status: "In progress",
+        };
+    
+        try {
+            const response = await fetch('http://localhost:5656/orders/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(order),
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                navigate('/profil');
+                console.log("Order created successfully:", data);
+            } else {
+                console.error("Error creating order:", response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error("Request failed", error);
+        }
+    };
+    
+
 
     useEffect(() => {
         let total = 0;
@@ -124,6 +144,9 @@ const Cart: FC = () => {
                 <p>Your cart is empty.</p>
             )}
             <p>Total: ${priceTotal.toFixed(2)}</p>
+            <button onClick={handleCreateOrder} className="mt-4 bg-blue-500 text-white p-2 rounded">
+                Create Order
+            </button>
         </div>
     );
 };

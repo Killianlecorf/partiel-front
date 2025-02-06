@@ -6,7 +6,7 @@ import Home from './pages/home';
 import Admin from './pages/admin';
 import AdminProduct from './pages/adminProduct';
 import Cart from './pages/Cart';
-import OrderAdmin from './pages/OrderAdmin/OrderAmin';
+import OrderAdmin from './pages/OrderAdmin/OrderAdmin';
 import Profil from './pages/profil';
 
 const App: React.FC = () => {

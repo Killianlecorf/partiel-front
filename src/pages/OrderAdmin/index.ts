@@ -1,2 +1,2 @@
-import OrderAmin from "./OrderAmin";
+import OrderAmin from "./OrderAdmin";
 export default OrderAmin
