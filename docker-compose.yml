@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  react-app:
+    build:
+      context: .  # Utilise le répertoire actuel pour le Dockerfile
+    ports:
+      - "3000:3000"  # Mapper le port 3000 du conteneur au port 3000 de l'hôte
+    volumes:
+      - .:/app  # Synchroniser le code entre l'hôte et le conteneur
+      - /app/node_modules  # Empêcher l'écrasement des node_modules dans le conteneur
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Pour forcer le rechargement en cas de modification dans certains systèmes de fichiers
+    command: npm start  # Démarrer l'application React
