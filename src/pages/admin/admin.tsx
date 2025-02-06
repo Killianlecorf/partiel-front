@@ -22,8 +22,8 @@ const Admin: FC = () => {
     <div className=''>
       <h1>Administrateur page</h1>
       <button onClick={() => navigate('/admin/product')}>Add product</button>
+      <button onClick={() => navigate('/admin/orders')}>Orders</button>
       <button onClick={() => navigate('/')}>back</button>
-
     </div>
   );
 }

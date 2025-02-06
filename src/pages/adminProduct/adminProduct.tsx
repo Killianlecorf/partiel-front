@@ -70,7 +70,7 @@ const AdminProduct: FC = () => {
       if (response.ok) {
         console.log('Product saved successfully:', response.data);
         closeModal();
-        fetchProducts(); // Refresh the product list after adding or editing a product
+        fetchProducts();
       } else {
         console.error('Failed to save product:', response.message);
       }
@@ -95,7 +95,7 @@ const AdminProduct: FC = () => {
       const response = await request(`products/${id}`, 'DELETE');
       if (response.ok) {
         console.log('Product deleted successfully');
-        fetchProducts(); // Refresh the product list after deleting a product
+        fetchProducts();
       } else {
         console.error('Failed to delete product:', response.message);
       }
