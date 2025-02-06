@@ -35,6 +35,19 @@ const Home: FC = () => {
     fetchProducts();
   }, []);
 
+  const handleLogout = async () => {
+    try {
+      const response = await request('users/logout', 'POST');
+      if (response.ok) {
+        navigate('/login');
+      } else {
+        console.error('Failed to logout:', response.message);
+      }
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   if (loading || loadingProducts) {
     return <div>Loading...</div>;
   }
@@ -43,6 +56,8 @@ const Home: FC = () => {
     <div className=''>
       <h1>Home</h1>
       {user && <p>Welcome, {user.email}</p>}
+      {user && user.isAdmin && <button onClick={() => navigate('/admin')}>Admin</button>}
+      <button onClick={handleLogout}>Logout</button>
       <h2>Products</h2>
       <ul>
         {products.map(product => (
