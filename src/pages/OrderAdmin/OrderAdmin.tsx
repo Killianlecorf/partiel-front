@@ -1,5 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import "./OrderAdmin.css"
 
 interface Product {
   id: number;
@@ -94,13 +95,14 @@ const OrderAdmin: FC = () => {
   }
 
   return (
-    <div className=''>
-      <h1>Orders</h1>
-      <button onClick={() => navigate('/admin')}>Back</button>
+    <div className="order-admin">
+      <h1 className="order-admin-title">Orders</h1>
+      <button onClick={() => navigate('/admin')} className="back-button">Back</button>
+
       {orders.length > 0 ? (
-        <ul>
+        <ul className="order-list">
           {orders.map(order => (
-            <li key={order.id} className='border p-2 mb-2 rounded'>
+            <li key={order.id} className="order-item">
               <h3>Order ID: {order.id}</h3>
               <p>Status: {order.statut}</p>
               <p>Created At: {new Date(order.createdAt).toLocaleString()}</p>
@@ -110,7 +112,7 @@ const OrderAdmin: FC = () => {
               <select
                 value={order.statut}
                 onChange={(e) => updateOrderStatus(order.id, e.target.value)}
-                className="border p-2 mt-2"
+                className="status-select"
               >
                 <option value="In progress">In progress</option>
                 <option value="Shipped">Shipped</option>
@@ -118,17 +120,17 @@ const OrderAdmin: FC = () => {
               </select>
 
               <h4>Order Items</h4>
-              <ul>
+              <ul className="order-items">
                 {order.orderItems.map(item => {
                   const product = products.find(p => p.id === item.product);
                   return product ? (
-                    <li key={item.id} className='ml-4'>
+                    <li key={item.id} className="order-item-details">
                       <p>Product: {product.name}</p>
                       <p>Price: ${product.price}</p>
                       <p>Quantity: {item.quantity}</p>
                     </li>
                   ) : (
-                    <li key={item.id} className='ml-4'>
+                    <li key={item.id} className="order-item-details">
                       <p>Product: Unknown (ID: {item.product})</p>
                       <p>Quantity: {item.quantity}</p>
                     </li>
