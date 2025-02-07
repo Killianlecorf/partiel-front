@@ -8,7 +8,6 @@ import AdminProduct from './pages/adminProduct';
 import Cart from './pages/Cart';
 import OrderAdmin from './pages/OrderAdmin/OrderAdmin';
 import Profil from './pages/profil';
-import useAuth from './hooks/useAuth';
 import ProtectedRoute from './utils/ProtectedRoute';
 
 const App: React.FC = () => {
@@ -19,7 +18,7 @@ const App: React.FC = () => {
         <Routes>=
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          
+
           <Route element={<ProtectedRoute />}>
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/product" element={<AdminProduct />} />
