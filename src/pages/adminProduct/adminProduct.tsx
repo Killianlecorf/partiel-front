@@ -116,79 +116,81 @@ const AdminProduct: FC = () => {
     }
   }, [loading, user, navigate]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-
-  if (loadingProducts) {
-    return <div>Loading...</div>;
+  if (loading || loadingProducts) {
+    return <div className="loading">Loading...</div>;
   }
 
   return (
-    <div className=''>
-      <h1>Admin</h1>
-      <h2>Add product</h2>
-      <button onClick={openModal}>Add Product</button>
+    <div className="admin-product">
+      <h1>Admin Dashboard</h1>
+      <button className="btn btn-primary" onClick={() => navigate("/admin")}>Back</button>
+      <button className="btn btn-primary" onClick={openModal}>Add Product</button>
+      
       {modalIsOpen && (
         <div className="modal">
           <div className="modal-content">
             <span className="close" onClick={closeModal}>&times;</span>
             <h2>{isEditMode ? 'Edit Product' : 'Add Product'}</h2>
             <form onSubmit={handleSubmit}>
-              <label>
-                Name:
+              <div className="form-group">
+                <label>Name:</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   required
+                  className="form-control"
                 />
-              </label>
-              <label>
-                Description:
+              </div>
+              <div className="form-group">
+                <label>Description:</label>
                 <input
                   type="text"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   required
+                  className="form-control"
                 />
-              </label>
-              <label>
-                Price:
+              </div>
+              <div className="form-group">
+                <label>Price:</label>
                 <input
                   type="number"
                   value={price}
                   onChange={(e) => setPrice(Number(e.target.value))}
                   required
+                  className="form-control"
                 />
-              </label>
-              <label>
-                Stock Available:
+              </div>
+              <div className="form-group">
+                <label>Stock Available:</label>
                 <input
                   type="number"
                   value={stockAvailable}
                   onChange={(e) => setStockAvailable(Number(e.target.value))}
                   required
+                  className="form-control"
                 />
-              </label>
-              <label>
-                Image URL:
+              </div>
+              <div className="form-group">
+                <label>Image URL:</label>
                 <input
                   type="text"
                   value={image}
                   onChange={(e) => setImage(e.target.value)}
                   required
+                  className="form-control"
                 />
-              </label>
-              <button type="submit">{isEditMode ? 'Save Changes' : 'Add Product'}</button>
-              <button type="button" onClick={closeModal}>Cancel</button>
+              </div>
+              <button type="submit" className="btn btn-success">{isEditMode ? 'Save Changes' : 'Add Product'}</button>
+              <button type="button" className="btn btn-secondary" onClick={closeModal}>Cancel</button>
             </form>
           </div>
         </div>
       )}
-      <h2>Products</h2>
-      <table>
+
+      <h2>Products List</h2>
+      <table className="product-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -207,11 +209,11 @@ const AdminProduct: FC = () => {
               <td>${product.price}</td>
               <td>{product.stockAvailable}</td>
               <td>
-                <img src={product.Image} alt={product.name} style={{ width: '100px', height: '100px' }} />
+                <img src={product.Image} alt={product.name} className="product-image" />
               </td>
               <td>
-                <button onClick={() => handleEdit(product)}>✏️</button>
-                <button onClick={() => handleDelete(product.id)}>❌</button>
+                <button className="btn btn-warning" onClick={() => handleEdit(product)}>✏️</button>
+                <button className="btn btn-danger" onClick={() => handleDelete(product.id)}>❌</button>
               </td>
             </tr>
           ))}
