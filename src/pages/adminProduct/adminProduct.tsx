@@ -213,7 +213,7 @@ const AdminProduct: FC = () => {
               </td>
               <td>
                 <button className="btn btn-warning" onClick={() => handleEdit(product)}>✏️</button>
-                <button className="btn btn-danger" onClick={() => handleDelete(product.id)}>❌</button>
+                {/* <button className="btn btn-danger" onClick={() => handleDelete(product.id)}>❌</button> */}
               </td>
             </tr>
           ))}
