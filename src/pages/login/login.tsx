@@ -26,36 +26,39 @@ const Login: React.FC = () => {
   return (
     <div className='LoginPage'>
       <div className="logo-Content">
-        <img src="/assets/img/logo.webp" alt="Logo" />
+        <img src="/assets/img/logo.webp" className='img-login' alt="Logo" />
       </div>
       <div className="form-content">
         <div className="form-back">
           <form onSubmit={handleSubmit} className='form-login'>
             <h2>Login</h2>
             <div className="input-form">
-              <label>
+              <label className='label-login'>
                 Email:
               </label>
               <input
                   type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className='input-login'
                   required
                 />
             </div>
             <div className="input-form">
-              <label>
+              <label className='label-login'>
                 Password:
               </label>
               <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className='input-login'
                   required
                 />
             </div>
-            <button type="submit">Login</button>
+            <button className='button-login' type="submit">Login</button>
           </form>
+          <a onClick={() => navigate("/register")}><p>register</p></a>
         </div>
       </div>
     </div>

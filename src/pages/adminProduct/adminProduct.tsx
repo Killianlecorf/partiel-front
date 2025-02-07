@@ -1,6 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 import request from '../../utils/request';
 import './adminProduct.css';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 
 interface Product {
   id: number;
@@ -8,7 +10,7 @@ interface Product {
   description: string;
   price: number;
   stockAvailable: number;
-  image: string;
+  Image: string;
 }
 
 const AdminProduct: FC = () => {
@@ -22,6 +24,8 @@ const AdminProduct: FC = () => {
   const [image, setImage] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
 
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => {
@@ -86,7 +90,7 @@ const AdminProduct: FC = () => {
     setDescription(product.description);
     setPrice(product.price);
     setStockAvailable(product.stockAvailable);
-    setImage(product.image);
+    setImage(product.Image);
     openModal();
   };
 
@@ -103,6 +107,19 @@ const AdminProduct: FC = () => {
       console.error('Error deleting product:', error);
     }
   };
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user || !user.isAdmin) {
+        navigate('/login');
+      }
+    }
+  }, [loading, user, navigate]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
 
   if (loadingProducts) {
     return <div>Loading...</div>;
@@ -190,7 +207,7 @@ const AdminProduct: FC = () => {
               <td>${product.price}</td>
               <td>{product.stockAvailable}</td>
               <td>
-                <img src={product.image} alt={product.name} style={{ width: '100px', height: '100px' }} />
+                <img src={product.Image} alt={product.name} style={{ width: '100px', height: '100px' }} />
               </td>
               <td>
                 <button onClick={() => handleEdit(product)}>✏️</button>

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import request from '../../utils/request';
 import "./register.css";
+import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -24,47 +26,51 @@ const Register: React.FC = () => {
   return (
     <div  className='LoginPage'>
       <div className="logo-Content">
-        <img src="/assets/img/logo.webp" alt="Logo" />
+        <img src="/assets/img/logo.webp" alt="Logo" className='img-register'/>
       </div>
       <div className="form-content">
         <div className="form-back-register">
           <form onSubmit={handleSubmit} className='form-register'>
             <h2>Register</h2>
               <div className="input-form">
-              <label>
+              <label className='label-register'>
                 Name:
               </label>
               <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  className='input-register'  
                   required
                 />
             </div>
             <div className="input-form">
-              <label>
+              <label className='label-register'>
                 Email:
               </label>
                 <input
                   type="text"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className='input-register'
                   required
                 />
             </div>
             <div className="input-form">
-              <label>
+              <label className='label-register'>
                 Password:
               </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className='input-register'
                   required
                 />
               </div>
-            <button type="submit">Register</button>
+            <button className='button-register' type="submit">Register</button>
           </form>
+          <a onClick={() => navigate("/login")}><p>Login</p></a>
         </div>
       </div>
     </div>

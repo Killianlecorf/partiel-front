@@ -3,6 +3,7 @@ import useAuth from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../../types/Product';
 import request from '../../utils/request';
+import "./Cart.css";
 
 interface CartItem {
     id: number;
@@ -68,7 +69,6 @@ const Cart: FC = () => {
     };
 
     const handleCreateOrder = async () => {
-        console.log("Commande - " + new Date().toLocaleDateString());
     
         const order = {
             userId: user?.id,
@@ -96,8 +96,6 @@ const Cart: FC = () => {
             console.error("Request failed", error);
         }
     };
-    
-
 
     useEffect(() => {
         let total = 0;
@@ -108,45 +106,55 @@ const Cart: FC = () => {
     }, [cartItems]);
 
     if (loading || userLoading) {
-        return <div>Loading...</div>;
+        return <div className="loading">Loading...</div>;
     }
 
     return (
-        <div>
-            <h1>Cart</h1>
-            <button onClick={() => navigate('/')}>Back</button>
+        <div className="cart-container">
+            <div className="cart-header">
+                <h1>Cart</h1>
+                <button onClick={() => navigate('/')}>Back</button>
+            </div>
+
             {cartItems.length > 0 ? (
-                <ul>
-                    {cartItems.map(item => (
-                        <li key={item.id} className='border p-2 mb-2 rounded'>
-                            <p className='font-semibold'>{item.product.name}</p>
-                            <p>Price: ${item.product.price}</p>
-                            <div>
-                                <label htmlFor={`quantity-${item.id}`}>Quantity:</label>
-                                <input
-                                    type="number"
-                                    id={`quantity-${item.id}`}
-                                    value={item.quantity}
-                                    min="1"
-                                    onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
-                                />
-                            </div>
-                            <button
-                                onClick={() => handleRemoveFromCart(item.id)}
-                                className='text-red-500 ml-2'
-                            >
-                                &#10005;
-                            </button>
-                        </li>
-                    ))}
-                </ul>
+                <div className="cart-items">
+                    <ul>
+                        {cartItems.map(item => (
+                            <li key={item.id}>
+                                <div>
+                                    <p className="product-name">{item.product.name}</p>
+                                    <p className="product-price">Price: ${item.product.price}</p>
+                                </div>
+                                <div className="quantity-container">
+                                    <label htmlFor={`quantity-${item.id}`}>Quantity:</label>
+                                    <input
+                                        type="number"
+                                        id={`quantity-${item.id}`}
+                                        value={item.quantity}
+                                        min="1"
+                                        onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                                    />
+                                </div>
+                                <button
+                                    onClick={() => handleRemoveFromCart(item.id)}
+                                    className="remove-btn"
+                                >
+                                    &#10005;
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             ) : (
                 <p>Your cart is empty.</p>
             )}
-            <p>Total: ${priceTotal.toFixed(2)}</p>
-            <button onClick={handleCreateOrder} className="mt-4 bg-blue-500 text-white p-2 rounded">
-                Create Order
-            </button>
+
+            <div className="cart-total">
+                <p>Total: ${priceTotal.toFixed(2)}</p>
+                <button onClick={handleCreateOrder} className="create-order-btn">
+                    Create Order
+                </button>
+            </div>
         </div>
     );
 };
