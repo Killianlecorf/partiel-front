@@ -19,6 +19,7 @@ const App: React.FC = () => {
         <Routes>=
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          
           <Route element={<ProtectedRoute />}>
             <Route path="/admin" element={<Admin />} />
             <Route path="/admin/product" element={<AdminProduct />} />
