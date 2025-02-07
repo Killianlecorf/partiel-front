@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import request from '../../utils/request';
 import { Product } from '../../types/Product';
+import ProductCard from '../../components/ProductCard/productCard';
+import "./home.css"
 
 const Home: FC = () => {
   const { user, loading } = useAuth();
@@ -53,7 +55,7 @@ const Home: FC = () => {
   const handleAddOrderItems = async (productId: number) => {
     const quantity = quantities[productId] || 1;
 
-    if (user == null) {
+    if (!user) {
       console.error('User is not logged in');
       return;
     }
@@ -78,7 +80,7 @@ const Home: FC = () => {
   };
 
   const handleQuantityChange = (productId: number, value: number) => {
-    if (value >= 1 && value <= (products.find(p => p.id === productId)?.stockAvailable || 0)) {
+    if (value >= 1 && value <= (products.find((p) => p.id === productId)?.stockAvailable || 0)) {
       setQuantities((prevQuantities) => ({
         ...prevQuantities,
         [productId]: value,
@@ -91,47 +93,35 @@ const Home: FC = () => {
   }
 
   return (
-    <div>
-      <h1>Home</h1>
-      {user && <p>Welcome, {user.email}</p>}
-      {user && user.isAdmin && <button onClick={() => navigate('/admin')}>Admin</button>}
-      {user && <button onClick={() => navigate('/profil')}>profil</button>}
-      <button onClick={handleLogout}>Logout</button>
-      <button onClick={() => navigate('/cart')}>Cart</button>
-      <h2>Products</h2>
-      {message && <p>{message}</p>}
-      <ul>
-        {products.map((product) => (
-          <li key={product.id}>
-            <h3>{product.name}</h3>
-            <p>{product.description}</p>
-            <p>Price: ${product.price}</p>
-            <p>Stock Available: {product.stockAvailable}</p>
-            <img
-              src={product.image}
-              alt={product.name}
-              style={{ width: '100px', height: '100px' }}
+    <div className="home-container">
+      <header className="home-header">
+        <h1>Home</h1>
+        <div>
+          {user && user.isAdmin && <button className="btn btn-primary" onClick={() => navigate('/admin')}>Admin</button>}
+          {user && <button className="btn btn-primary" onClick={() => navigate('/profil')}>Profile</button>}
+          <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
+          <button className="btn btn-success" onClick={() => navigate('/cart')}>🛒 Cart</button>
+        </div>
+      </header>
+
+      {message && <p className="message">{message}</p>}
+
+      <section className="products-container">
+        <h2 className="products-title">Products</h2>
+        <div className="products-grid">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              quantity={quantities[product.id] || 1}
+              onQuantityChange={handleQuantityChange}
+              onAddToCart={handleAddOrderItems}
             />
-            <div>
-              <label htmlFor={`quantity-${product.id}`}>Quantity:</label>
-              <input
-                type="number"
-                id={`quantity-${product.id}`}
-                value={quantities[product.id] || 1}
-                min="1"
-                max={product.stockAvailable}
-                onChange={(e) =>
-                  handleQuantityChange(product.id, parseInt(e.target.value, 10))
-                }
-              />
-            </div>
-            <button onClick={() => handleAddOrderItems(product.id)}>
-              Add to Cart
-            </button>
-          </li>
-        ))}
-      </ul>
+          ))}
+        </div>
+      </section>
     </div>
+
   );
 };
 

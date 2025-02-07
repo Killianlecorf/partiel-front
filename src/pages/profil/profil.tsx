@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
+import './profil.css';
 
 interface OrderItem {
   id: number;
@@ -84,26 +85,30 @@ const Profil: FC = () => {
   };
 
   if (loading || userLoading) {
-    return <div>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
   return (
-    <div className=''>
-      <h1>Profil</h1>
-      <h2>Your Order History</h2>
+    <div className="profil-container">
+      <div className="profil-header">
+        <h1>Profil</h1>
+        <button className='btn-primary' onClick={() => navigate("/")}>Back</button>
+        <h2>Your Order History</h2>
+      </div>
+      
       {orders.length > 0 ? (
-        <ul>
+        <ul className="orders-list">
           {orders.map((order: Order) => (
-            <li key={order.id} className='border p-4 mb-4 rounded'>
+            <li key={order.id} className="order-item">
               <h3>Order ID: {order.id} - {order.name}</h3>
-              <p>Status: {order.statut}</p>
+              <p className={`status ${order.statut.toLowerCase()}`}>Status: {order.statut}</p>
               <p>Created At: {new Date(order.createdAt).toLocaleString()}</p>
               <p>Updated At: {new Date(order.updateAt).toLocaleString()}</p>
             </li>
           ))}
         </ul>
       ) : (
-        <p>You have no orders.</p>
+        <p className="no-orders-message">You have no orders.</p>
       )}
     </div>
   );

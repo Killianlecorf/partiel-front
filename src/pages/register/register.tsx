@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import request from '../../utils/request';
+import "./register.css";
+import { useNavigate } from 'react-router-dom';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -21,41 +24,55 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', width: '300px' }}>
-        <h2>Register</h2>
-        <label>
-          Name:
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-            style={{ marginBottom: '10px', padding: '8px', fontSize: '16px' }}
-          />
-        </label>
-        <label>
-          Email:
-          <input
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ marginBottom: '10px', padding: '8px', fontSize: '16px' }}
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            style={{ marginBottom: '20px', padding: '8px', fontSize: '16px' }}
-          />
-        </label>
-        <button type="submit" style={{ padding: '10px', fontSize: '16px' }}>Register</button>
-      </form>
+    <div  className='LoginPage'>
+      <div className="logo-Content">
+        <img src="/assets/img/logo.webp" alt="Logo" className='img-register'/>
+      </div>
+      <div className="form-content">
+        <div className="form-back-register">
+          <form onSubmit={handleSubmit} className='form-register'>
+            <h2>Register</h2>
+              <div className="input-form">
+              <label className='label-register'>
+                Name:
+              </label>
+              <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className='input-register'  
+                  required
+                />
+            </div>
+            <div className="input-form">
+              <label className='label-register'>
+                Email:
+              </label>
+                <input
+                  type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className='input-register'
+                  required
+                />
+            </div>
+            <div className="input-form">
+              <label className='label-register'>
+                Password:
+              </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className='input-register'
+                  required
+                />
+              </div>
+            <button className='button-register' type="submit">Register</button>
+          </form>
+          <a onClick={() => navigate("/login")}><p>Login</p></a>
+        </div>
+      </div>
     </div>
   );
 };
